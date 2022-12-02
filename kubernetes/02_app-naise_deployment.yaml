@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-naise
+  labels:
+    app.kubernetes.io/name: app-naise
+    app: app-naise
+  namespace: naise
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-naise
+      app.kubernetes.io/name: app-naise
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: app-naise
+        app.kubernetes.io/name: app-naise
+    spec:
+      volumes:
+        - name: app-naise-storage
+          persistentVolumeClaim:
+            claimName: app-naise-pvc
+      containers:
+      - image: quay.io/juansebasrodriguez/app-naise:latest
+        imagePullPolicy: Always
+        name: app-naise
+        ports:
+        - containerPort: 80
+          name: app-naise
+        volumeMounts:
+        - mountPath: "/etc/naise/app"
+          name: app-naise-storage
+        env:
+        - name: HELLO_TAG
+          value: "Hello World!"
+        resources:
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+          requests:
+            cpu: "1000m"
+            memory: "1Gi"
+
