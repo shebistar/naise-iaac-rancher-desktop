@@ -23,6 +23,8 @@ Open Rancher Desktop Dashboard and create the namespace using the file [00_names
 Repeat the same process with files [01_app-naise_pvc.yaml](kubernetes/01_app-naise_pvc.yaml), [02_app-naise_deployment.yaml](kubernetes/02_app-naise_deployment.yaml) and [03_app-naise_service.yaml](kubernetes/03_app-naise_service.yaml)
 
 
+# Test App
 
+Using a browser go to http://localhost:32001 and you will see the UI
 
 
