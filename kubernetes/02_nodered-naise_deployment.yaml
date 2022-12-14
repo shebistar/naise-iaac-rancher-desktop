@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodered-naise
+  labels:
+    app.kubernetes.io/name: nodered-naise
+    app: nodered-naise
+  namespace: naise
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodered-naise
+      app.kubernetes.io/name: nodered-naise
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: nodered-naise
+        app.kubernetes.io/name: nodered-naise
+    spec:
+      volumes:
+        - name: nodered-naise-storage
+          persistentVolumeClaim:
+            claimName: nodered-naise-pvc
+      containers:
+      - image: nodered/node-red
+        imagePullPolicy: Always
+        name: nodered-naise
+        ports:
+        - containerPort: 1880
+          name: nodered-naise
+        volumeMounts:
+        - mountPath: "/data"
+          name: nodered-naise-storage
+        env:
+        - name: HELLO_TAG
+          value: "Hello World!"
+        resources:
+          limits:
+            cpu: "200m"
+            memory: "1Gi"
+          requests:
+            cpu: "200m"
+            memory: "1Gi"
+
