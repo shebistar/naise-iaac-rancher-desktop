@@ -27,4 +27,33 @@ Repeat the same process with files [01_app-naise_pvc.yaml](kubernetes/01_app-nai
 
 Using a browser go to http://localhost:32001 and you will see the UI
 
+# TODO Grafana has some extra steps, due the need of copy the contents of the /var/lib/grafana in installer
+
+# Mosquitto installation
+
+First is to clone repository:
+
+    $ git clone https://github.com/halkeye-helm-charts/mosquitto.git
+
+Modify mosquito/values.yaml file, adding NodePort or LoadBalancer and enabling the storageClass.
+
+    service:
+        type: NodePort
+
+    persistence:
+        storageClass: "local-path"
+
+If you want to map MQTT to a static port (Nodeport: 32003 in this case), modify mosquitto/templates/service.yaml file
+
+      ports:
+    - port: 1883
+      nodePort: 32003
+      targetPort: default
+      protocol: TCP
+      name: default
+
+
+Run:
+
+    helm install mosquitto --generate-name -n naise
 
